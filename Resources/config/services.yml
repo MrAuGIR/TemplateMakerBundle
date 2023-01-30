@@ -16,6 +16,11 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    TemplateMakerBundle\Service\:
+        resource: '../../Controller'
+        public: true
+
+
 # add more services, or override services that need manual wiring
 #    TemplateMakerBundle\ExampleClass:
 #        arguments:
