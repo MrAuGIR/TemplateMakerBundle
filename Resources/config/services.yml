@@ -17,7 +17,7 @@ services:
         tags: ['controller.service_arguments']
 
     TemplateMakerBundle\Service\:
-        resource: '../../Controller'
+        resource: '../../Service'
         public: true
 
 
