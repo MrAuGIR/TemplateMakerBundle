@@ -8,6 +8,8 @@ use TemplateMakerBundle\Exception\ClassNotFoundException;
 
 class ClassDefinitionManager
 {
+    public static array $cacheDefinitions = [];
+
     /**
      * @return array
      */
@@ -32,11 +34,14 @@ class ClassDefinitionManager
      */
     public static function getClassDefinition(string $id) : ?ClassDefinition {
 
-        $class = ClassDefinition::getById($id);
-        if(empty($class)) {
-            throw new ClassNotFoundException("Class with id ".$id." not found");
+        if (isset(static::$cacheDefinitions[$id])) {
+            return static::$cacheDefinitions[$id];
         }
 
+        if (empty($class = ClassDefinition::getById($id))) {
+            throw new ClassNotFoundException("Class with id ".$id." not found");
+        }
+        static::$cacheDefinitions[$id] = $class;
         return $class;
     }
 }
