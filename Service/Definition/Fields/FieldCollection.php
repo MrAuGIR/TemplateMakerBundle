@@ -29,13 +29,13 @@ class FieldCollection implements Field
             $fields = [];
             foreach ($fc->getDefinition()->getFieldDefinitions() as $definition) {
 
-                $field = $this->processor->process($definition,$fc);
+                $field = $this->processor->extractDataFromField($definition,$fc);
 
                 if (!empty($field)) {
-                    $fields = array_merge($fields,$field);
+                    $fields[] = $field;
                 }
             }
-            $result[$fc->getFieldName()][] = array_merge([], ...$fields);
+            $result[$fc->getFieldName()] = array_merge([], ...$fields);
         }
         return $result;
     }

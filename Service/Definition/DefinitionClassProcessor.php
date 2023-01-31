@@ -35,7 +35,7 @@ class DefinitionClassProcessor
         return $fields;
     }
 
-    private function extractDataFromField(ClassDefinition\Data $definition, ?ModelInterface $object) : array {
+    public function extractDataFromField(ClassDefinition\Data $definition, ?ModelInterface $object) : array {
 
         $type = $definition->getFieldtype();
 
