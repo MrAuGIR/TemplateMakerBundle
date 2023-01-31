@@ -2,7 +2,6 @@
 
 namespace TemplateMakerBundle\Service\Definition;
 
-use Pimcore\Model\DataObject\ClassDefinition\Data\TypeDeclarationSupportInterface;
 use Pimcore\Tool;
 use Pimcore\Model\ModelInterface;
 use Pimcore\Model\DataObject\ClassDefinition;
@@ -19,6 +18,7 @@ class DefinitionClassProcessor
 
     public function __construct(#[TaggedIterator('class.definition.field')] iterable $fields)
     {
+        $this->fields = $fields;
         $this->cacheFieldDefinition = [];
         $this->languages = Tool::getValidLanguages();
     }
@@ -27,8 +27,9 @@ class DefinitionClassProcessor
         $fields = [];
         foreach ($definition->getFieldDefinitions() as $fieldDefinition) {
             $field = $this->extractDataFromField($fieldDefinition, $object);
+
             if (!empty($field)) {
-                $fields[] = $field;
+                $fields = array_merge($fields,$field);
             }
         }
         return $fields;

@@ -23,7 +23,7 @@ class Text implements Field
         return [
             $data->getName() => [
                 'type' => 'text',
-                'value' => $object->$getter() ?? null
+                'value' => $object?->$getter() ?? null
             ]
         ];
     }
