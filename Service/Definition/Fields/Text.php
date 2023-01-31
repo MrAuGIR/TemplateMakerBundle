@@ -17,7 +17,7 @@ class Text implements Field
         return in_array($fieldClass,$this->allowedFields);
     }
 
-    public function formate(ModelInterface $object, TypeDeclarationSupportInterface $data, array $languages): array
+    public function extract(TypeDeclarationSupportInterface $data,?ModelInterface $object, array $languages = []): array
     {
         $getter = 'get'.$data->getName();
         return [

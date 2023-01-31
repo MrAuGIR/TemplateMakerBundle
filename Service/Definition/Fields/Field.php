@@ -11,5 +11,5 @@ interface Field
 {
     public function match(string $fieldClass = '') : bool;
 
-    public function formate(ModelInterface $object, TypeDeclarationSupportInterface $data, array $languages) : array;
+    public function extract(TypeDeclarationSupportInterface $data, ?ModelInterface $object, array $languages = []) : array;
 }
