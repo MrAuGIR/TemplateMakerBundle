@@ -26,4 +26,36 @@ class TemplateMakerBundle extends AbstractPimcoreBundle
             '/bundles/templatemaker/js/pimcore/startup.js'
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getComposerPackageName() : string {
+        return self::COMPOSER_PACKAGE_NAME;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNiceName() : string {
+        return self::BUNDLE_NAME;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription() : string {
+        return self::BUNDLE_DESCRIPTION;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion() : string {
+        return self::BUNDLE_VERSION;
+    }
+
+    public function getInstaller() : ?Object {
+        return $this->container->get('template.maker.installer');
+    }
 }
