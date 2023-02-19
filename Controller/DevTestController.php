@@ -17,9 +17,11 @@ class DevTestController extends FrontendController
     public function indexAction(Request $request)
     {
 
-        $element = Element::getById(1);
+        $list = new Element\Listing();
+        $list->setCondition("template_id = ?", [1]);
+        $elements = $list->load();
 
-        dd($element);
+        dd($elements);
 
 
         return new Response('Hello world from template_maker');

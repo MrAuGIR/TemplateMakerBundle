@@ -24,6 +24,13 @@ class Dao extends AbstractDao
         $this->assignVariablesToModel($data);
     }
 
+    public function getByTemplateId(int $id) : ?array {
+
+        $sql = 'SELECT * FROM '.$this->tableName.' WHERE template_id = ?';
+
+        return $this->db->fetchAllAssociative($sql,[$id]);
+    }
+
     public function save() {
         $vars = get_object_vars($this->model);
 

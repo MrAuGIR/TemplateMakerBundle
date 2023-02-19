@@ -9,6 +9,8 @@ class Element extends AbstractModel
 {
     public ?int $id;
 
+    public ?int $templateId;
+
     public ?array $positions;
 
     public ?string $styles;
@@ -20,7 +22,7 @@ class Element extends AbstractModel
     public ?string $dataTransformer;
 
     /**
-     * get score by id
+     * get Element by id
      *
      * @param int $id
      * @return null|self
@@ -32,7 +34,18 @@ class Element extends AbstractModel
             return $obj;
         }
         catch (NotFoundException $ex) {
-            \Pimcore\Logger::warn("Vote with id $id not found");
+            \Pimcore\Logger::warn("Element with id $id not found");
+        }
+        return null;
+    }
+
+    public static function getByTemplateId(int $id) : ?self {
+        try {
+            $obj = new self;
+            $obj->getDao()->getByTemplateId($id);
+            return $obj;
+        } catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Element with id $id not found");
         }
         return null;
     }
@@ -77,17 +90,26 @@ class Element extends AbstractModel
         return $this->filter;
     }
 
-    public function setFiler(?string $filter) : self {
+    public function setFilter(?string $filter) : self {
         $this->filter = $filter;
         return $this;
     }
 
-    public function getDataTransformer() : ?string {
+    public function getData_transformer() : ?string {
         return $this->dataTransformer;
     }
 
-    public function setDataTransformer(?string $transformer) : self {
+    public function setData_transformer(?string $transformer) : self {
         $this->dataTransformer = $transformer;
+        return $this;
+    }
+
+    public function getTemplate_id() : ?int {
+        return $this->templateId;
+    }
+
+    public function setTemplate_id(?int $id) : self {
+        $this->templateId = $id;
         return $this;
     }
 }
