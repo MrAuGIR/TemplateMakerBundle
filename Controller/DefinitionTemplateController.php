@@ -6,6 +6,7 @@ use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TemplateMakerBundle\Service\DbTableInstaller;
 
 class DefinitionTemplateController extends FrontendController
 {
@@ -23,6 +24,7 @@ class DefinitionTemplateController extends FrontendController
 
     #[Route("/template/create", name: "template_create_definition", methods: ["POST"])]
     public function createNewTemplateDefinition(Request $request) : JsonResponse {
+
         $data = [
             "name" => "product14page",
             "class" => "Pimcore\Model\DataObject\Product",
