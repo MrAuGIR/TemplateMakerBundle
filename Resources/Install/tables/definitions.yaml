@@ -1,0 +1,15 @@
+
+definitions:
+    template_maker_element:
+        id: "int(11) PRIMARY KEY AUTO_INCREMENT"
+        template_id: "int(11)"
+        field: "varchar(190)"
+        filter: "varchar(190)"
+        type: "varchar(190)"
+        data_transformer: "varchar(255)"
+        positions: "varchar(255)"
+        styles: "text"
+    template_maker_template:
+        id: "int(11) PRIMARY KEY AUTO_INCREMENT"
+        name: "varchar(255)"
+        class: "varchar(255)"

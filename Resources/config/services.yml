@@ -1,16 +1,9 @@
 services:
-    # default configuration for services in *this* file
     _defaults:
-        # automatically injects dependencies in your services
         autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
         autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
         public: false
 
-    # controllers are imported separately to make sure they're public
-    # and have a tag that allows actions to type-hint services
     TemplateMakerBundle\Controller\:
         resource: '../../Controller'
         public: true
@@ -20,10 +13,7 @@ services:
         resource: '../../Service'
         public: true
 
-
-# add more services, or override services that need manual wiring
-#    TemplateMakerBundle\ExampleClass:
-#        arguments:
-#            - "@service_id"
-#            - "plain_value"
-#            - "%parameter%"
+    template.maker.installer:
+        class: TemplateMakerBundle\Service\Installer
+        public: true
+        autowire: true
