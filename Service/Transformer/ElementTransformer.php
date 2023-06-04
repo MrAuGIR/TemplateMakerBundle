@@ -38,6 +38,7 @@ class ElementTransformer implements TransformerInterface
     }
 
     private function hydrateModel(array $data) : void {
+
         $this->model->setValues([
             'field' => $data['field'],
             'filter' => $data['filter'] ?? '',
@@ -45,5 +46,9 @@ class ElementTransformer implements TransformerInterface
             'style' => $data['style'],
             'position' => json_encode($data['position'], true)
         ]);
+
+        if (isset($data['template_id']) ) {
+            $this->model->setTemplate_id($data['template_id']);
+        }
     }
 }

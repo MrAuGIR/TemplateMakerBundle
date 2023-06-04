@@ -9,7 +9,7 @@ class Element extends AbstractModel
 {
     public ?int $id;
 
-    public ?int $templateId;
+    public ?int $template_id;
 
     public ?string $field;
 
@@ -120,11 +120,11 @@ class Element extends AbstractModel
     }
 
     public function getTemplate_id() : ?int {
-        return $this->templateId;
+        return $this->template_id;
     }
 
     public function setTemplate_id(?int $id) : self {
-        $this->templateId = $id;
+        $this->template_id = $id;
         return $this;
     }
 }
