@@ -28,6 +28,11 @@ class TemplateTransformer implements TransformerInterface
         $this->model->setValue('name',$data['name'])
             ->setValue('class', $data['class']);
 
+        $this->model->save();
+
+        /**
+         * @todo setter le nouvel id du template sur les elements
+         */
         if (!empty($elements = $data["elements"])) {
             $this->model->setValue('elements',$this->transformElements($elements));
         }
@@ -42,6 +47,7 @@ class TemplateTransformer implements TransformerInterface
     private function transformElements(array $elements) : array {
         $return = [];
         foreach ($elements as $element) {
+            $element['template_id'] = $this->model->getId();
             $this->elementTransformer->transform($element);
             $return[] = $this->elementTransformer->getModel();
         }
