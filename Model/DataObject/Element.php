@@ -11,6 +11,8 @@ class Element extends AbstractModel
 
     public ?int $templateId;
 
+    public ?string $field;
+
     public ?array $positions;
 
     public ?string $styles;
@@ -63,6 +65,10 @@ class Element extends AbstractModel
         return $this;
     }
 
+    public function getField() : ?string {
+        return $this->field;
+    }
+
     public function getPositions() : ?array {
         return $this->positions;
     }
@@ -83,6 +89,11 @@ class Element extends AbstractModel
 
     public function getType() : ?string {
         return $this->type;
+    }
+
+    public function setField(string $field) : self {
+        $this->field = $field;
+        return $this;
     }
 
     public function setType(?string $type) : self {
