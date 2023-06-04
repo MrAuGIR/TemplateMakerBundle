@@ -16,6 +16,9 @@ class DefinitionClassProcessor
 
     private array $languages;
 
+    /**
+     * @param iterable $fields
+     */
     public function __construct(#[TaggedIterator('class.definition.field')] iterable $fields)
     {
         $this->fields = $fields;
@@ -23,6 +26,11 @@ class DefinitionClassProcessor
         $this->languages = Tool::getValidLanguages();
     }
 
+    /**
+     * @param ClassDefinition $definition
+     * @param ModelInterface|null $object
+     * @return array
+     */
     public function process(ClassDefinition $definition, ?ModelInterface $object) : array {
         $fields = [];
         foreach ($definition->getFieldDefinitions() as $fieldDefinition) {
@@ -35,6 +43,11 @@ class DefinitionClassProcessor
         return $fields;
     }
 
+    /**
+     * @param ClassDefinition\Data $definition
+     * @param ModelInterface|null $object
+     * @return array
+     */
     public function extractDataFromField(ClassDefinition\Data $definition, ?ModelInterface $object) : array {
 
         $type = $definition->getFieldtype();

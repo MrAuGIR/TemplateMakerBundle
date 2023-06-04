@@ -35,7 +35,6 @@ class DefinitionClassController extends FrontendController
 
             $data = $this->processor->process($class,$object);
 
-
         }catch (ClassNotFoundException $e) {
             return $this->json(['error' => $e->getMessage()],404);
         }

@@ -24,6 +24,11 @@ class Dao extends AbstractDao
         $this->assignVariablesToModel($data);
     }
 
+    /**
+     * @param int $id
+     * @return array|null
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function getByTemplateId(int $id) : ?array {
 
         $sql = 'SELECT * FROM '.$this->tableName.' WHERE template_id = ?';
