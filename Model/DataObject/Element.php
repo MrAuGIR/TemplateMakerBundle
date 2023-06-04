@@ -39,6 +39,10 @@ class Element extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return self|null
+     */
     public static function getByTemplateId(int $id) : ?self {
         try {
             $obj = new self;

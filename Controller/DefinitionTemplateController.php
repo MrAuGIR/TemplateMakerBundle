@@ -6,14 +6,23 @@ use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use TemplateMakerBundle\Service\DbTableInstaller;
+use TemplateMakerBundle\Model\DataObject\Template;
+use TemplateMakerBundle\Service\Transformer\Dispatcher;
 
 class DefinitionTemplateController extends FrontendController
 {
+    public function __construct(
+        private Dispatcher $dispatcher
+    ){}
+
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
 
-        return $this->json([],200);
+        $template = Template::getById($id);
+
+        dd($template->getElements());
+
+        return $this->json([$template->getElements()],200);
     }
 
     #[Route("/template/list/template", name: "template_list_template", methods: ["GET"])]
@@ -22,8 +31,9 @@ class DefinitionTemplateController extends FrontendController
         return $this->json([],200);
     }
 
-    #[Route("/template/create", name: "template_create_definition", methods: ["POST"])]
+    #[Route("/template/create", name: "template_create_definition", methods: ["POST","GET"])]
     public function createNewTemplateDefinition(Request $request) : JsonResponse {
+
 
         $data = [
             "name" => "product14page",
@@ -67,6 +77,7 @@ class DefinitionTemplateController extends FrontendController
             ]
         ];
 
+        $this->dispatcher->dispatch($data);
 
         return $this->json([],200);
     }

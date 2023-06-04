@@ -14,6 +14,11 @@ class Template extends AbstractModel
     public string $name;
 
     /**
+     * @var Element[]
+     */
+    public array $elements;
+
+    /**
      * get Template by id
      *
      * @param int $id
@@ -31,25 +36,52 @@ class Template extends AbstractModel
         return null;
     }
 
+    /**
+     * @return int|null
+     */
     public function getId() : ?int {
         return $this->id;
     }
 
+    /**
+     * @param int|null $id
+     * @return $this
+     */
     public function setId(?int $id) : self {
         $this->id = $id;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getClass() : string {
         return $this->class;
     }
 
+    /**
+     * @param string $class
+     * @return $this
+     */
     public function setClass(string $class) : self {
         $this->class = $class;
         return $this;
     }
 
+    /**
+     * @return Element[]
+     */
+    public function getElements() : array {
+        return $this->elements;
+    }
 
-
+    /**
+     * @param Element[] $elements
+     * @return $this
+     */
+    public function setElements(array $elements) : self {
+        $this->elements = $elements;
+        return $this;
+    }
 
 }
