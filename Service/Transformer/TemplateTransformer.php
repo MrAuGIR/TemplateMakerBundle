@@ -22,10 +22,9 @@ class TemplateTransformer implements TransformerInterface
      */
     public function transform(array $data): void
     {
-        $this->setModel(new Template());
-        $this->model->setId(null); // create
-
-        $this->model->setValue('name',$data['name'])
+        $this->model = $this->getOrCreate($data['name']);
+        $this->model
+            ->setValue('name',$data['name'])
             ->setValue('class', $data['class']);
 
         $this->model->save();
@@ -34,6 +33,7 @@ class TemplateTransformer implements TransformerInterface
          * @todo setter le nouvel id du template sur les elements
          */
         if (!empty($elements = $data["elements"])) {
+            $this->model->getDao()->removeElements($this->model->getId());
             $this->model->setValue('elements',$this->transformElements($elements));
         }
 
@@ -68,5 +68,17 @@ class TemplateTransformer implements TransformerInterface
     public function setModel(AbstractModel $model): TransformerInterface {
         $this->model = $model;
         return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return Template
+     */
+    private function getOrCreate(string $name) : Template {
+        if (empty($template = Template::getByName($name))) {
+            $template = new Template();
+            $template->setId(null);
+        }
+        return $template;
     }
 }

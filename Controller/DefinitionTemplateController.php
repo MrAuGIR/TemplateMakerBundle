@@ -31,54 +31,34 @@ class DefinitionTemplateController extends FrontendController
         return $this->json([],200);
     }
 
-    #[Route("/template/create", name: "template_create_definition", methods: ["POST","GET"])]
-    public function createNewTemplateDefinition(Request $request) : JsonResponse {
 
+    #[Route("/template/update/{name}", name: "template_update_definition", methods: ["PUT"])]
+    #[Route("/template/create", name: "template_create_definition", methods: ["POST"])]
+    public function createNewTemplateDefinition(Request $request, ?string $name) : JsonResponse {
 
-        $data = [
-            "name" => "product14page",
-            "class" => "Pimcore\Model\DataObject\Product",
-            "elements" => [
-                0 => [
-                    "field" => "description",
-                    "filter" => "raw",
-                    "type" => "text",
-                    "position" => [
-                        'top' => "15mm",
-                        'left' => "5mm",
-                        'width' => "30mm",
-                        'height' => "25mm"
-                    ],
-                    "style" => "font-size:12pt; font-weight:800"
-                ],
-                1 => [
-                    "field" => "poids",
-                    "filter" => null,
-                    "type" => "numeric",
-                    "position" => [
-                        'top' => "1mm",
-                        'left' => "5mm",
-                        'width' => "11mm",
-                        'height' => "11mm"
-                    ],
-                    "style" => "font-size:8pt; font-weight:400"
-                ],
-                2 => [
-                    "field" => "mainPicture",
-                    "type" => "image",
-                    "position" => [
-                        'top' => "15mm",
-                        'left' => "25mm",
-                        'width' => "25mm",
-                        'height' => "25mm"
-                    ],
-                    "style" => ""
-                ]
-            ]
-        ];
+        $data = $request->getContent();
+        $data = json_decode($data,true);
 
         $this->dispatcher->dispatch($data);
 
         return $this->json([],200);
+    }
+
+    /**
+     * @param string $name
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route("/template/delete/{name}", name: "template_delete_definition", methods: ['DELETE'])]
+    public function deleteTemplateDefinition(string $name, Request $request) : JsonResponse {
+
+        try {
+            if (!empty($template = Template::getByName($name))) {
+                $template->getDao()->delete();
+            }
+        }catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
+        return $this->json(['message' => sprintf("Template with %s deleted ",$template->getId())],200);
     }
 }
