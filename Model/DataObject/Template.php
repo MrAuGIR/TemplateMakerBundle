@@ -37,6 +37,21 @@ class Template extends AbstractModel
     }
 
     /**
+     * @param string $name
+     * @return self|null
+     */
+    public static function getByName(string $name) : ?self {
+        try {
+            $obj = new self;
+            $obj->getDao()->getByName($name);
+            return $obj;
+        }catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Template with name $name not found");
+        }
+        return null;
+    }
+
+    /**
      * @return int|null
      */
     public function getId() : ?int {
