@@ -37,6 +37,10 @@ class ElementTransformer implements TransformerInterface
         return $this;
     }
 
+    /**
+     * @param array $data
+     * @return void
+     */
     private function hydrateModel(array $data) : void {
 
         $this->model->setValues([

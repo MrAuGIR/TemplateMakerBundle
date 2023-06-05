@@ -11,10 +11,18 @@ use TemplateMakerBundle\Service\Transformer\Dispatcher;
 
 class DefinitionTemplateController extends FrontendController
 {
+    /**
+     * @param Dispatcher $dispatcher
+     */
     public function __construct(
         private Dispatcher $dispatcher
     ){}
 
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
 
@@ -25,23 +33,44 @@ class DefinitionTemplateController extends FrontendController
         return $this->json([$template->getElements()],200);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route("/template/list/template", name: "template_list_template", methods: ["GET"])]
     public function getListTemplateDefinition(Request $request) : JsonResponse {
+
+        $list = new Template\Listing();
+        $list->load();
+        foreach ($list as $template) {
+
+        }
 
         return $this->json([],200);
     }
 
 
+    /**
+     * @param Request $request
+     * @param string|null $name
+     * @return JsonResponse
+     */
     #[Route("/template/update/{name}", name: "template_update_definition", methods: ["PUT"])]
     #[Route("/template/create", name: "template_create_definition", methods: ["POST"])]
     public function createNewTemplateDefinition(Request $request, ?string $name) : JsonResponse {
+        try {
+            $data = $request->getContent();
+            if (empty($data = json_decode($data,true))) {
+                throw new \JsonException("Invalid Json Format exception");
+            }
 
-        $data = $request->getContent();
-        $data = json_decode($data,true);
+            $this->dispatcher->dispatch($data);
 
-        $this->dispatcher->dispatch($data);
+        }catch(\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
 
-        return $this->json([],200);
+        return $this->json(['message' => ""],200);
     }
 
     /**
