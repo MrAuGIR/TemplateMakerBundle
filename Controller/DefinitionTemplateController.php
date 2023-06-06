@@ -7,15 +7,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TemplateMakerBundle\Model\DataObject\Template;
+use TemplateMakerBundle\Service\Serializer\TemplateSerializer;
 use TemplateMakerBundle\Service\Transformer\Dispatcher;
 
 class DefinitionTemplateController extends FrontendController
 {
     /**
      * @param Dispatcher $dispatcher
+     * @param TemplateSerializer $serializer
      */
     public function __construct(
-        private Dispatcher $dispatcher
+        private Dispatcher $dispatcher,
+        private TemplateSerializer $serializer
     ){}
 
     /**
@@ -26,11 +29,13 @@ class DefinitionTemplateController extends FrontendController
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
 
-        $template = Template::getById($id);
+        if (empty($template = Template::getById($id))) {
+            return $this->json(['error' => "Template with id $id not found"],500);
+        }
 
-        dd($template->getElements());
+        $data = $this->serializer->serialize($template);
 
-        return $this->json([$template->getElements()],200);
+        return new JsonResponse($data,200,[],true);
     }
 
     /**
@@ -39,14 +44,15 @@ class DefinitionTemplateController extends FrontendController
      */
     #[Route("/template/list/template", name: "template_list_template", methods: ["GET"])]
     public function getListTemplateDefinition(Request $request) : JsonResponse {
-
+        $data = [];
         $list = new Template\Listing();
         $list->load();
-        foreach ($list as $template) {
 
+        foreach ($list as $template) {
+            $data[] = $this->serializer->formateData($template);
         }
 
-        return $this->json([],200);
+        return $this->json($data,200);
     }
 
 
