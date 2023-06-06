@@ -42,15 +42,15 @@ class DefinitionTemplateController extends FrontendController
      */
     #[Route("/template/list/template", name: "template_list_template", methods: ["GET"])]
     public function getListTemplateDefinition(Request $request) : JsonResponse {
-
+        $data = [];
         $list = new Template\Listing();
         $list->load();
-        /** @todo  mettre en place une interface de serialization et deserialization */
-        foreach ($list as $template) {
 
+        foreach ($list as $template) {
+            $data[] = $this->serializer->formateData($template);
         }
 
-        return $this->json([],200);
+        return $this->json($data,200);
     }
 
 

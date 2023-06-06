@@ -16,12 +16,20 @@ class TemplateSerializer
      * @return string
      */
     public function serialize(Template $template) : string {
-        return json_encode( [
+        return json_encode($this->formateData($template));
+    }
+
+    /**
+     * @param Template $template
+     * @return array
+     */
+    public function formateData(Template $template) : array {
+        return [
             'id' => $template->getId(),
             'name' => $template->getName(),
             'class' => $template->getClass(),
             'elements' => $this->getElementsFormate($template->getElements())
-        ]);
+        ];
     }
 
     /**

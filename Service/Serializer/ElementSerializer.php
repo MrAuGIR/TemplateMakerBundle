@@ -23,7 +23,7 @@ class ElementSerializer
             'field' => $element->getField(),
             'filter' => $element->getFilter(),
             'type' => $element->getType(),
-            'position' => $element->getPositions(),
+            'position' => json_decode($element->getPositions(),true),
             'style' => $element->getStyles()
         ];
     }
