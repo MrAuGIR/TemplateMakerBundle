@@ -29,7 +29,9 @@ class DefinitionTemplateController extends FrontendController
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
 
-        $template = Template::getById($id);
+        if (empty($template = Template::getById($id))) {
+            return $this->json(['error' => "Template with id $id not found"],500);
+        }
 
         $data = $this->serializer->serialize($template);
 
