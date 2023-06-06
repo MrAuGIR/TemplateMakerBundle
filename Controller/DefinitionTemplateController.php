@@ -7,15 +7,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TemplateMakerBundle\Model\DataObject\Template;
+use TemplateMakerBundle\Service\Serializer\TemplateSerializer;
 use TemplateMakerBundle\Service\Transformer\Dispatcher;
 
 class DefinitionTemplateController extends FrontendController
 {
     /**
      * @param Dispatcher $dispatcher
+     * @param TemplateSerializer $serializer
      */
     public function __construct(
-        private Dispatcher $dispatcher
+        private Dispatcher $dispatcher,
+        private TemplateSerializer $serializer
     ){}
 
     /**
@@ -28,9 +31,9 @@ class DefinitionTemplateController extends FrontendController
 
         $template = Template::getById($id);
 
-        dd($template->getElements());
+        $data = $this->serializer->serialize($template);
 
-        return $this->json([$template->getElements()],200);
+        return new JsonResponse($data,200,[],true);
     }
 
     /**
@@ -42,6 +45,7 @@ class DefinitionTemplateController extends FrontendController
 
         $list = new Template\Listing();
         $list->load();
+        /** @todo  mettre en place une interface de serialization et deserialization */
         foreach ($list as $template) {
 
         }

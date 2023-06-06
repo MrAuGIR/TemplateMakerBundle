@@ -13,7 +13,7 @@ class Element extends AbstractModel
 
     public ?string $field;
 
-    public ?array $positions;
+    public ?string $positions;
 
     public ?string $styles;
 
@@ -69,11 +69,11 @@ class Element extends AbstractModel
         return $this->field;
     }
 
-    public function getPositions() : ?array {
+    public function getPositions() : ?string {
         return $this->positions;
     }
 
-    public function setPositions(?array $position) : self {
+    public function setPositions(?string $position) : self {
         $this->positions = $position;
         return $this;
     }

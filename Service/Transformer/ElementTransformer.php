@@ -48,7 +48,7 @@ class ElementTransformer implements TransformerInterface
             'filter' => $data['filter'] ?? '',
             'type' => $data['type'],
             'style' => $data['style'],
-            'position' => json_encode($data['position'], true)
+            'positions' => json_encode($data['position'])
         ]);
 
         if (isset($data['template_id']) ) {
