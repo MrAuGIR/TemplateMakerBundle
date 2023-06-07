@@ -6,6 +6,7 @@ use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TemplateMakerBundle\Exception\TemplateNotFoundException;
 use TemplateMakerBundle\Model\DataObject\Template;
 use TemplateMakerBundle\Service\Serializer\TemplateSerializer;
 use TemplateMakerBundle\Service\Transformer\Dispatcher;
@@ -28,12 +29,17 @@ class DefinitionTemplateController extends FrontendController
      */
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
+        try {
+            if (empty($template = Template::getById($id))) {
+                throw new TemplateNotFoundException(sprintf("Template with %s not found",$id));
+            }
+            $data = $this->serializer->serialize($template);
 
-        if (empty($template = Template::getById($id))) {
-            return $this->json(['error' => "Template with id $id not found"],500);
+        } catch (TemplateNotFoundException $e) {
+            return $this->json(['error' => $e->getMessage()],404);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
         }
-
-        $data = $this->serializer->serialize($template);
 
         return new JsonResponse($data,200,[],true);
     }
@@ -48,10 +54,13 @@ class DefinitionTemplateController extends FrontendController
         $list = new Template\Listing();
         $list->load();
 
-        foreach ($list as $template) {
-            $data[] = $this->serializer->formateData($template);
+        try {
+            foreach ($list as $template) {
+                $data[] = $this->serializer->formateData($template);
+            }
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
         }
-
         return $this->json($data,200);
     }
 

@@ -4,13 +4,19 @@ namespace TemplateMakerBundle\Model\DataObject;
 
 use Pimcore\Model\AbstractModel;
 use Pimcore\Model\Exception\NotFoundException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Template extends AbstractModel
 {
     public ?int $id;
 
+    #[Assert\NotBlank]
     public string $class;
 
+    /**
+     * @var string
+     */
+    #[Assert\NotBlank]
     public string $name;
 
     /**
