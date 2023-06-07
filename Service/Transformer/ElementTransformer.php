@@ -3,19 +3,38 @@
 namespace TemplateMakerBundle\Service\Transformer;
 
 use Pimcore\Model\AbstractModel;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use TemplateMakerBundle\Exception\Validator\ElementValidationException;
 use TemplateMakerBundle\Model\DataObject\Element;
 
 class ElementTransformer implements TransformerInterface
 {
     protected AbstractModel $model;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(
+        private ValidatorInterface $validator
+    ){}
+
     /**
      * @param array $data
      * @return void
+     * @throws ElementValidationException
      */
     public function transform(array $data): void
     {
         $this->setModel(new Element());
         $this->hydrateModel($data);
+
+        // validation des elements
+        $errors = $this->validator->validate($this->model);
+        if (count($errors) > 0) {
+            $errorsString = (string) $errors;
+            throw new ElementValidationException($errorsString);
+        }
+
         $this->model->save();
     }
 

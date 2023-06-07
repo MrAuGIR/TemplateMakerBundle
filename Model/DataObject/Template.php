@@ -17,7 +17,6 @@ class Template extends AbstractModel
      * @var string
      */
     #[Assert\NotBlank]
-    #[Assert\Unique]
     public string $name;
 
     /**

@@ -4,10 +4,9 @@ namespace TemplateMakerBundle\Exception\Validator;
 
 use Throwable;
 
-class TemplateValidationException extends \Exception
+class ElementValidationException extends \Exception
 {
-
-    const PREFIX = "The template contain some contrait violation ";
+    const PREFIX = "Template's elements contains some contrait violation ";
     /**
      * @param string $message
      * @param int $code

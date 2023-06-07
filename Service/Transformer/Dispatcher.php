@@ -2,6 +2,7 @@
 
 namespace TemplateMakerBundle\Service\Transformer;
 
+use TemplateMakerBundle\Exception\Validator\TemplateValidationException;
 use TemplateMakerBundle\Model\DataObject\Template;
 
 class Dispatcher
@@ -30,6 +31,7 @@ class Dispatcher
     /**
      * @param array $data
      * @return void
+     * @throws TemplateValidationException
      */
     public function dispatch(array $data) : void {
 
