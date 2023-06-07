@@ -2,6 +2,7 @@
 
 namespace TemplateMakerBundle\Service\Serializer;
 
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TemplateMakerBundle\Model\DataObject\Element;
 use TemplateMakerBundle\Model\DataObject\Template;
 

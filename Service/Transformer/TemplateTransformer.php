@@ -3,16 +3,20 @@
 namespace TemplateMakerBundle\Service\Transformer;
 
 use Pimcore\Model\AbstractModel;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TemplateMakerBundle\Model\DataObject\Template;
 
 class TemplateTransformer implements TransformerInterface
 {
     private AbstractModel $model;
+
     /**
      * @param ElementTransformer $elementTransformer
+     * @param ValidatorInterface $validator
      */
     public function __construct(
-        private ElementTransformer $elementTransformer
+        private ElementTransformer $elementTransformer,
+        private ValidatorInterface $validator
     ){}
 
 
@@ -29,12 +33,15 @@ class TemplateTransformer implements TransformerInterface
 
         $this->model->save();
 
-        /**
-         * @todo setter le nouvel id du template sur les elements
-         */
         if (!empty($elements = $data["elements"])) {
             $this->model->getDao()->removeElements($this->model->getId());
             $this->model->setValue('elements',$this->transformElements($elements));
+        }
+
+        // validation de l'objet
+        if ($errors = $this->validator->validate($this->model) > 0) {
+            $errorsString = (string) $errors;
+
         }
 
         $this->model->save();
