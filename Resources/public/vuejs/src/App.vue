@@ -1,5 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import {useClassDefinitionStore} from "@/stores/classDefinition";
+const classesStore = useClassDefinitionStore();
 </script>
 
 <template>
@@ -16,6 +18,35 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <RouterView />
 </template>
+
+<script>
+export default {
+
+    created() {
+
+    },
+    methods: {
+        getClassDefinition () {
+            const headers = new Headers({
+                "Authorization": process.env.VUE_APP_API_KEY
+            })
+
+            fetch('/template/list/class', {
+                method: "GET",
+                headers: headers
+            })
+                .then((response) => {
+                    return response.json
+                })
+                .then((json) => {
+                    this.classesStore.classes = json
+                })
+        }
+    }
+
+}
+
+</script>
 
 <style scoped>
 header {
