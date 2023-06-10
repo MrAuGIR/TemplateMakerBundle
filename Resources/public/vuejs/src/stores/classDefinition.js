@@ -5,10 +5,10 @@ export const useClassDefinitionStore = defineStore('classDefinition', {
     }),
     getters: {
         getClassById: (state) => {
-            return (id) => state.classes.find((class) =>  class.id === id)
+            return (id) => state.classes.find((c) =>  c.id === id)
         },
         getClassByName: (state) => {
-            return (name) => state.classes.find((class) => class.name === name)
+            return (name) => state.classes.find((c) => c.name === name)
         }
     }
 })
