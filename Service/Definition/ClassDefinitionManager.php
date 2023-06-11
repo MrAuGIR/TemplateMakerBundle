@@ -2,9 +2,12 @@
 
 namespace TemplateMakerBundle\Service\Definition;
 
+use Doctrine\DBAL\Exception;
+use Pimcore\Db;
 use Pimcore\Tool;
 use Pimcore\Model\DataObject\ClassDefinition;
 use TemplateMakerBundle\Exception\ClassNotFoundException;
+use TemplateMakerBundle\Model\DataObject\Template;
 
 class ClassDefinitionManager
 {
@@ -21,7 +24,8 @@ class ClassDefinitionManager
                 'id' => $class->getId(),
                 'name' => $class->getName(),
                 'description' => $class->getDescription(),
-                'url' => Tool::getHostUrl('http')."/template/class/".$class->getId()
+                'url' => Tool::getHostUrl('http')."/template/class/".$class->getId(),
+                'numbTemplate' => self::getNumberTemplateLinked($class->getName())
             ];
         }
         return $return;
@@ -43,5 +47,20 @@ class ClassDefinitionManager
         }
         static::$cacheDefinitions[$id] = $class;
         return $class;
+    }
+
+    /**
+     * @param string $className
+     * @return int
+     * @throws Exception
+     * @todo utiliser une requete preparé
+     */
+    public static function getNumberTemplateLinked(string $className) : int {
+        $listing = new Template\Listing();
+
+        $db = Db::get();
+        $data = $db->fetchAllAssociative("SELECT * FROM template_maker_template as tmt WHERE tmt.class LIKE '%$className'");
+
+        return count($data);
     }
 }
