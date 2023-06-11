@@ -1,7 +1,6 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import {useClassDefinitionStore} from "@/stores/classDefinition";
-const classesStore = useClassDefinitionStore();
+import { RouterLink, RouterView } from 'vue-router';
+import ListClassesDefinition from "@/components/ListClassesDefinition.vue";
 </script>
 
 <template>
@@ -16,33 +15,13 @@ const classesStore = useClassDefinitionStore();
     </div>
   </header>
 
-  <RouterView />
+    <RouterView />
+    <ListClassesDefinition />
 </template>
 
 <script>
+
 export default {
-
-    created() {
-
-    },
-    methods: {
-        getClassDefinition () {
-            const headers = new Headers({
-                "Authorization": process.env.VUE_APP_API_KEY
-            })
-
-            fetch('/template/list/class', {
-                method: "GET",
-                headers: headers
-            })
-                .then((response) => {
-                    return response.json
-                })
-                .then((json) => {
-                    this.classesStore.classes = json
-                })
-        }
-    }
 
 }
 

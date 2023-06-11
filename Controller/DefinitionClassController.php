@@ -20,9 +20,12 @@ class DefinitionClassController extends FrontendController
     #[Route("/template/list/class", name: "template_maker_list_class", methods: ["GET"])]
     public function getListClass(HttpFoundation\Request $request) : HttpFoundation\JsonResponse {
 
-        $list = ClassDefinitionManager::getClassList();
 
-        return $this->json(['classes' => $list],200);
+        if (empty($list = ClassDefinitionManager::getClassList())) {
+            return $this->json(['warning' => "il n'y  a pas de class pimcore sur cette application"],204);
+        }
+
+        return new HttpFoundation\JsonResponse(['classes' => $list],200,[],false);
     }
 
     #[Route("/template/class/{idClass}", name: "template_maker_get_definition_class", methods: ["GET"])]
