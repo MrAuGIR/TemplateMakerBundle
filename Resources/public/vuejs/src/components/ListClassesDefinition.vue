@@ -10,6 +10,9 @@
                 @click="selectClassDef(classDef)"
             ></list-class-definition-card>
         </div>
+        <div v-if="this.currentClassDefinition !== null">
+            <class-definition :classDef="this.currentClassDefinition"></class-definition>
+        </div>
     </div>
 </template>
 
@@ -17,8 +20,9 @@
 
 import {useClassDefinitionStore} from "@/stores/classDefinition";
 import ListClassDefinitionCard from "@/components/ClassesDefinition/ListCard.vue";
+import ClassDefinition from "@/components/ClassesDefinition/ClassDefinition.vue";
 export default {
-    components: {ListClassDefinitionCard},
+    components: {ClassDefinition, ListClassDefinitionCard},
     setup() {
         const classesDefinitionStore = useClassDefinitionStore()
         return {
