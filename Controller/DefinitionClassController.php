@@ -42,6 +42,6 @@ class DefinitionClassController extends FrontendController
             return $this->json(['error' => $e->getMessage()],404);
         }
 
-        return $this->json($data,200);
+        return new HttpFoundation\JsonResponse($data,200,[], false);
     }
 }

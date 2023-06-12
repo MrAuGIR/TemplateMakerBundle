@@ -3,7 +3,12 @@
     <div>
         <div v-if="loaderActive">chargement en cours...</div>
         <div v-else>
-            <list-class-definition-card v-for="classDef in this.classesDefinitionStore.classesDefinition.classes" :class-def="classDef"></list-class-definition-card>
+            <list-class-definition-card
+                v-for="classDef in this.classesDefinitionStore.classesDefinition.classes"
+                :key="classDef.id"
+                :class-def="classDef"
+                @click="selectClassDef(classDef)"
+            ></list-class-definition-card>
         </div>
     </div>
 </template>
@@ -23,11 +28,12 @@ export default {
     data: () => {
         return {
             loaderActive: true,
+            currentClassDefinition: null
         }
     },
     name : "ListClassesDefinition.vue",
     methods: {
-        async getClassDefinition () {
+        async getListClassDefinition () {
             // const headers = new Headers({
             //     "Authorization": ""
             // })
@@ -37,10 +43,20 @@ export default {
             });
             this.classesDefinitionStore.classesDefinition = await res.json();
             this.loaderActive = false;
+        },
+        async getClassDefinition (url) {
+            const res = await fetch(`http://localhost:8080${url}`,{
+                method: "GET"
+            });
+            this.currentClassDefinition = await res.json();
+        },
+        selectClassDef(classDef) {
+            this.getClassDefinition(classDef.url)
+
         }
     },
     mounted() {
-        this.getClassDefinition()
+        this.getListClassDefinition()
     }
 }
 </script>
