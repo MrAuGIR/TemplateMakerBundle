@@ -6,79 +6,103 @@ use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use TemplateMakerBundle\Exception\TemplateNotFoundException;
 use TemplateMakerBundle\Model\DataObject\Template;
+use TemplateMakerBundle\Service\Serializer\TemplateSerializer;
 use TemplateMakerBundle\Service\Transformer\Dispatcher;
 
 class DefinitionTemplateController extends FrontendController
 {
+    /**
+     * @param Dispatcher $dispatcher
+     * @param TemplateSerializer $serializer
+     */
     public function __construct(
-        private Dispatcher $dispatcher
+        private Dispatcher $dispatcher,
+        private TemplateSerializer $serializer
     ){}
 
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route("/template/template/{id}" ,name: "template_template_id", methods: ["GET"])]
     public function getTemplateDefinition(int $id, Request $request) : JsonResponse {
+        try {
+            if (empty($template = Template::getById($id))) {
+                throw new TemplateNotFoundException(sprintf("Template with %s not found",$id));
+            }
+            $data = $this->serializer->serialize($template);
 
-        $template = Template::getById($id);
+        } catch (TemplateNotFoundException $e) {
+            return $this->json(['error' => $e->getMessage()],404);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
 
-        dd($template->getElements());
-
-        return $this->json([$template->getElements()],200);
+        return new JsonResponse($data,200,[],true);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route("/template/list/template", name: "template_list_template", methods: ["GET"])]
     public function getListTemplateDefinition(Request $request) : JsonResponse {
+        $data = [];
+        $list = new Template\Listing();
+        $list->load();
 
-        return $this->json([],200);
+        try {
+            foreach ($list as $template) {
+                $data[] = $this->serializer->formateData($template);
+            }
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
+        return $this->json($data,200);
     }
 
-    #[Route("/template/create", name: "template_create_definition", methods: ["POST","GET"])]
-    public function createNewTemplateDefinition(Request $request) : JsonResponse {
 
+    /**
+     * @param Request $request
+     * @param string|null $name
+     * @return JsonResponse
+     */
+    #[Route("/template/update/{name}", name: "template_update_definition", methods: ["PUT"])]
+    #[Route("/template/create", name: "template_create_definition", methods: ["POST"])]
+    public function createNewTemplateDefinition(Request $request, ?string $name) : JsonResponse {
+        try {
+            $data = $request->getContent();
+            if (empty($data = json_decode($data,true))) {
+                throw new \JsonException("Invalid Json Format exception");
+            }
 
-        $data = [
-            "name" => "product14page",
-            "class" => "Pimcore\Model\DataObject\Product",
-            "elements" => [
-                0 => [
-                    "field" => "description",
-                    "filter" => "raw",
-                    "type" => "text",
-                    "position" => [
-                        'top' => "15mm",
-                        'left' => "5mm",
-                        'width' => "30mm",
-                        'height' => "25mm"
-                    ],
-                    "style" => "font-size:12pt; font-weight:800"
-                ],
-                1 => [
-                    "field" => "poids",
-                    "filter" => null,
-                    "type" => "numeric",
-                    "position" => [
-                        'top' => "1mm",
-                        'left' => "5mm",
-                        'width' => "11mm",
-                        'height' => "11mm"
-                    ],
-                    "style" => "font-size:8pt; font-weight:400"
-                ],
-                2 => [
-                    "field" => "mainPicture",
-                    "type" => "image",
-                    "position" => [
-                        'top' => "15mm",
-                        'left' => "25mm",
-                        'width' => "25mm",
-                        'height' => "25mm"
-                    ],
-                    "style" => ""
-                ]
-            ]
-        ];
+            $this->dispatcher->dispatch($data);
 
-        $this->dispatcher->dispatch($data);
+        }catch(\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
 
-        return $this->json([],200);
+        return $this->json(['message' => ""],200);
+    }
+
+    /**
+     * @param string $name
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route("/template/delete/{name}", name: "template_delete_definition", methods: ['DELETE'])]
+    public function deleteTemplateDefinition(string $name, Request $request) : JsonResponse {
+
+        try {
+            if (!empty($template = Template::getByName($name))) {
+                $template->getDao()->delete();
+            }
+        }catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()],500);
+        }
+        return $this->json(['message' => sprintf("Template with %s deleted ",$template->getId())],200);
     }
 }

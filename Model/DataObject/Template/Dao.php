@@ -26,17 +26,41 @@ class Dao extends AbstractDao
 
         $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE id = ?', [$this->model->getId()]);
 
-        if(!$data["id"]) {
+        if(is_bool($data) || !isset($data["id"])) {
             throw new NotFoundException("Object with the ID " . $this->model->getId() . " doesn't exists");
         }
 
         $this->assignVariablesToModel($data);
 
-        if (!empty($elements = $this->db->fetchAllAssociative("SELECT * FROM ".$this->tableElement.' WHERE template_id = ?',[$data['id']]))) {
+        $this->extracteElements($data['id']);
+    }
 
-            $elements = $this->hydrateElement($elements);
-            $this->model->setValue('elements',$elements);
+    /**
+     * @param string $name
+     * @return void
+     * @throws Exception
+     */
+    public function getByName(string $name) : void {
+
+        $this->model->setName($name);
+
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE name = ?',[$this->model->getName()]);
+
+        if (empty($data)) {
+            throw new NotFoundException("Object with the NAME " . $this->model->getName() . " doesn't exists");
         }
+        $this->assignVariablesToModel($data);
+
+        $this->extracteElements($data['id']);
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     * @throws Exception
+     */
+    public function removeElements(int $id) : void {
+        $this->db->delete($this->tableElement, ["template_id" => $this->model->getId()]);
     }
 
     /**
@@ -84,6 +108,7 @@ class Dao extends AbstractDao
      */
     public function delete() : void {
         $this->db->delete($this->tableName, ["id" => $this->model->getId()]);
+        $this->removeElements($this->model->getId());
     }
 
     /**
@@ -103,6 +128,20 @@ class Dao extends AbstractDao
             $elements[] = (new Element())->setValues($element);
         }
         return $elements;
+    }
+
+    /**
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
+    public function extracteElements($id): void
+    {
+        if (!empty($elements = $this->db->fetchAllAssociative("SELECT * FROM " . $this->tableElement . ' WHERE template_id = ?', [$id]))) {
+
+            $elements = $this->hydrateElement($elements);
+            $this->model->setValue('elements', $elements);
+        }
     }
 
 }

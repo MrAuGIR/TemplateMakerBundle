@@ -4,13 +4,19 @@ namespace TemplateMakerBundle\Model\DataObject;
 
 use Pimcore\Model\AbstractModel;
 use Pimcore\Model\Exception\NotFoundException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Template extends AbstractModel
 {
     public ?int $id;
 
+    #[Assert\NotBlank]
     public string $class;
 
+    /**
+     * @var string
+     */
+    #[Assert\NotBlank]
     public string $name;
 
     /**
@@ -32,6 +38,21 @@ class Template extends AbstractModel
         }
         catch (NotFoundException $ex) {
             \Pimcore\Logger::warn("Template with id $id not found");
+        }
+        return null;
+    }
+
+    /**
+     * @param string $name
+     * @return self|null
+     */
+    public static function getByName(string $name) : ?self {
+        try {
+            $obj = new self;
+            $obj->getDao()->getByName($name);
+            return $obj;
+        }catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Template with name $name not found");
         }
         return null;
     }
@@ -81,6 +102,22 @@ class Template extends AbstractModel
      */
     public function setElements(array $elements) : self {
         $this->elements = $elements;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() : string {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name) : self {
+        $this->name = $name;
         return $this;
     }
 

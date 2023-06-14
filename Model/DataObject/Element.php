@@ -4,16 +4,19 @@ namespace TemplateMakerBundle\Model\DataObject;
 
 use Pimcore\Model\AbstractModel;
 use Pimcore\Model\Exception\NotFoundException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Element extends AbstractModel
 {
     public ?int $id;
 
-    public ?int $templateId;
+    #[Assert\NotBlank]
+    public int $template_id;
 
     public ?string $field;
 
-    public ?array $positions;
+    #[Assert\Type('string')]
+    public ?string $positions;
 
     public ?string $styles;
 
@@ -69,11 +72,11 @@ class Element extends AbstractModel
         return $this->field;
     }
 
-    public function getPositions() : ?array {
+    public function getPositions() : ?string {
         return $this->positions;
     }
 
-    public function setPositions(?array $position) : self {
+    public function setPositions(?string $position) : self {
         $this->positions = $position;
         return $this;
     }
@@ -119,12 +122,12 @@ class Element extends AbstractModel
         return $this;
     }
 
-    public function getTemplate_id() : ?int {
-        return $this->templateId;
+    public function getTemplate_id() : int {
+        return $this->template_id;
     }
 
-    public function setTemplate_id(?int $id) : self {
-        $this->templateId = $id;
+    public function setTemplate_id(int $id) : self {
+        $this->template_id = $id;
         return $this;
     }
 }
