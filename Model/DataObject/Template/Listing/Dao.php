@@ -32,7 +32,6 @@ class Dao extends AbstractDao
         $queryBuilder->from($this->getTableName());
 
         $this->applyListingParametersToQueryBuilder($queryBuilder);
-
         return $queryBuilder;
     }
 
@@ -64,6 +63,7 @@ class Dao extends AbstractDao
         $query = $this->getQueryBuilder();
 
         $objectIds = $this->db->fetchFirstColumn((string) $query, $this->model->getConditionVariables(), $this->model->getConditionVariableTypes());
+
         $this->totalCount = (int) $this->db->fetchOne('SELECT FOUND_ROWS()');
 
         return array_map('intval', $objectIds);
