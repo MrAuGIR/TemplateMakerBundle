@@ -5,8 +5,11 @@
 <template>
     <div>
         <div v-for="(value, key) in classDef" :key="key">
-            <label>{{ key }}</label> : <br>
-            <span v-for="(data,key) in value" :key="key">{{key}} : {{data}}</span>
+            <label>{{ key }}</label>  <br>
+            <span v-for="(data, key) in value" :key="key">
+               {{key}} :
+            {{ data }}
+            </span>
         </div>
     </div>
 </template>
