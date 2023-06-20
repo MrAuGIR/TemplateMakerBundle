@@ -14,7 +14,7 @@
         </div>
         <div class="current-class-column">
             <div v-if="this.listObjectIds !== null">
-                <ObjectSelector :object-ids="this.listObjectIds"></ObjectSelector>
+                <ObjectSelector :object-ids="this.listObjectIds" v-model="this.selectedObjectId"></ObjectSelector>
             </div>
             <div v-if="this.currentClassDefinition !== null">
                 <class-definition :classDef="this.currentClassDefinition"></class-definition>
@@ -41,7 +41,9 @@ export default {
         return {
             loaderActive: true,
             currentClassDefinition: null,
-            listObjectIds: []
+            listObjectIds: [],
+            selectedObjectId: null,
+            currentUriClassDef: null,
         }
     },
     name : "ListClassesDefinition.vue",
@@ -64,8 +66,10 @@ export default {
             this.currentClassDefinition = await res.json();
         },
         selectClassDef(classDef) {
+            this.currentUriClassDef = classDef.uri
             this.getClassDefinition(classDef.url);
             this.getObjects(classDef.listObjectUri);
+            this.selectedObjectId = null;
 
         },
         async getObjects (uri) {
@@ -74,10 +78,25 @@ export default {
             });
             let listObjectIds = await res.json();
             this.listObjectIds = listObjectIds.ids;
+        },
+        async getClassDefinitionHydrated (objectId) {
+            const res = await fetch(`http://localhost:8080/${this.currentUriClassDef}/${objectId}`,{
+                method: "GET"
+            });
+            this.currentClassDefinition = await res.json()
         }
     },
     mounted() {
         this.getListClassDefinition()
+    },
+    watch: {
+        selectedObjectId: {
+            immediate: true,
+            handler(newValue) {
+                console.log("nouvelle valeur selected object id")
+                this.getClassDefinitionHydrated(newValue)
+            }
+        }
     }
 }
 </script>
