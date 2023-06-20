@@ -1,17 +1,21 @@
 
 <template>
-    <div>
-        <div v-if="loaderActive">chargement en cours...</div>
-        <div v-else>
-            <list-class-definition-card
-                v-for="classDef in this.classesDefinitionStore.classesDefinition.classes"
-                :key="classDef.id"
-                :class-def="classDef"
-                @click="selectClassDef(classDef)"
-            ></list-class-definition-card>
+    <div class="main-content">
+        <div class="left-side">
+            <div v-if="loaderActive">chargement en cours...</div>
+            <div v-else>
+                <list-class-definition-card
+                    v-for="classDef in this.classesDefinitionStore.classesDefinition.classes"
+                    :key="classDef.id"
+                    :class-def="classDef"
+                    @click="selectClassDef(classDef)"
+                ></list-class-definition-card>
+            </div>
         </div>
-        <div v-if="this.currentClassDefinition !== null">
-            <class-definition :classDef="this.currentClassDefinition"></class-definition>
+        <div class="current-class-column">
+            <div v-if="this.currentClassDefinition !== null">
+                <class-definition :classDef="this.currentClassDefinition"></class-definition>
+            </div>
         </div>
     </div>
 </template>
@@ -66,5 +70,24 @@ export default {
 </script>
 
 <style scoped>
+
+    .main-content {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .left-side {
+        display: flex;
+        flex-direction: column;
+        width: 33%;
+    }
+
+    .current-class-column {
+        display: flex;
+        flex-direction: column;
+        width: 77%;
+    }
 
 </style>
