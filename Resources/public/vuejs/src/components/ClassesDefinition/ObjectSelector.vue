@@ -5,7 +5,7 @@
 <template>
     <div>
         <select name="objectIds">
-            <option v-for="id in this.objectIds" :value="id" :key="id">{{id}}</option>
+            <option v-for="objectId in this.objectIds" :value="objectId" :key="objectId">{{objectId}}</option>
         </select>
     </div>
 </template>

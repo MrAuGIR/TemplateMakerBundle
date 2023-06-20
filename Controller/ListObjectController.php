@@ -8,14 +8,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ListObjectController extends \Pimcore\Controller\FrontendController
 {
-    #[Route("/template/list/object/{classId}", name: "template_list_object_by_class", methods: ["GET"])]
-    public function getListIdByClass(string $classId) : JsonResponse {
+    #[Route("/template/list/object/{className}", name: "template_list_object_by_class", methods: ["GET"])]
+    public function getListIdByClass(string $className) : JsonResponse {
 
-        $result = $this->getElementsIdByClass($classId);
+        $result = $this->getElementsIdByClass($className);
 
         return new JsonResponse(['ids' => $result],200,[],false);
     }
 
+    /**
+     * @param string $class
+     * @return array
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
     private function getElementsIdByClass(string $class) : array {
         $db = Db::get();
 

@@ -15,6 +15,8 @@ class ClassDefinitionManager
 
     /**
      * @return array
+     * @throws Exception
+     * @todo remplacer les uri par des constantes ?
      */
     public static function getClassList() : array {
         $list = new ClassDefinition\Listing();
@@ -25,6 +27,7 @@ class ClassDefinitionManager
                 'name' => $class->getName(),
                 'description' => $class->getDescription(),
                 'url' => Tool::getHostUrl('http')."/template/class/".$class->getId(),
+                'listObjectUri' => Tool::getHostUrl('http')."/template/list/object/".$class->getName(),
                 'numbTemplate' => self::getNumberTemplateLinked($class->getName())
             ];
         }

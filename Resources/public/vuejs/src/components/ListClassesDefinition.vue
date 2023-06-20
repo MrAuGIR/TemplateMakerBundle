@@ -13,6 +13,9 @@
             </div>
         </div>
         <div class="current-class-column">
+            <div v-if="this.listObjectIds !== null">
+                <ObjectSelector :object-ids="this.listObjectIds"></ObjectSelector>
+            </div>
             <div v-if="this.currentClassDefinition !== null">
                 <class-definition :classDef="this.currentClassDefinition"></class-definition>
             </div>
@@ -25,8 +28,9 @@
 import {useClassDefinitionStore} from "@/stores/classDefinition";
 import ListClassDefinitionCard from "@/components/ClassesDefinition/ListCard.vue";
 import ClassDefinition from "@/components/ClassesDefinition/ClassDefinition.vue";
+import ObjectSelector from "@/components/ClassesDefinition/ObjectSelector.vue";
 export default {
-    components: {ClassDefinition, ListClassDefinitionCard},
+    components: {ObjectSelector, ClassDefinition, ListClassDefinitionCard},
     setup() {
         const classesDefinitionStore = useClassDefinitionStore()
         return {
@@ -36,7 +40,8 @@ export default {
     data: () => {
         return {
             loaderActive: true,
-            currentClassDefinition: null
+            currentClassDefinition: null,
+            listObjectIds: []
         }
     },
     name : "ListClassesDefinition.vue",
@@ -59,8 +64,16 @@ export default {
             this.currentClassDefinition = await res.json();
         },
         selectClassDef(classDef) {
-            this.getClassDefinition(classDef.url)
+            this.getClassDefinition(classDef.url);
+            this.getObjects(classDef.listObjectUri);
 
+        },
+        async getObjects (uri) {
+            const res = await fetch(`http://localhost:8080${uri}`, {
+                method: "GET"
+            });
+            let listObjectIds = await res.json();
+            this.listObjectIds = listObjectIds.ids;
         }
     },
     mounted() {
