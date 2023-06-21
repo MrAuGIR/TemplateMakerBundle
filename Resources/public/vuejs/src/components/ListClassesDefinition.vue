@@ -96,8 +96,9 @@ export default {
         selectedObjectId: {
             immediate: true,
             handler(newValue) {
-                console.log("nouvelle valeur selected object id")
-                this.getClassDefinitionHydrated(newValue)
+                if (newValue !== null) {
+                    this.getClassDefinitionHydrated(newValue)
+                }
             }
         }
     }
