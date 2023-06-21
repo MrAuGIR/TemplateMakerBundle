@@ -14,7 +14,7 @@
         </div>
         <div class="current-class-column">
             <div v-if="this.listObjectIds !== null">
-                <ObjectSelector :object-ids="this.listObjectIds" v-model="this.selectedObjectId"></ObjectSelector>
+                <ObjectSelector :object-ids="this.listObjectIds" @update-object-id="handleChangeId"></ObjectSelector>
             </div>
             <div v-if="this.currentClassDefinition !== null">
                 <class-definition :classDef="this.currentClassDefinition"></class-definition>
@@ -66,7 +66,7 @@ export default {
             this.currentClassDefinition = await res.json();
         },
         selectClassDef(classDef) {
-            this.currentUriClassDef = classDef.uri
+            this.currentUriClassDef = classDef.url
             this.getClassDefinition(classDef.url);
             this.getObjects(classDef.listObjectUri);
             this.selectedObjectId = null;
@@ -80,10 +80,13 @@ export default {
             this.listObjectIds = listObjectIds.ids;
         },
         async getClassDefinitionHydrated (objectId) {
-            const res = await fetch(`http://localhost:8080/${this.currentUriClassDef}/${objectId}`,{
+            const res = await fetch(`http://localhost:8080${this.currentUriClassDef}/${objectId}`,{
                 method: "GET"
             });
             this.currentClassDefinition = await res.json()
+        },
+        handleChangeId(id) {
+            this.selectedObjectId = id
         }
     },
     mounted() {
