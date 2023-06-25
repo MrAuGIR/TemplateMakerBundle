@@ -6,11 +6,6 @@
     <div>
         <div v-for="(value, key) in classDef" :key="key">
             <ElementDefinition :elementKey="key" :elementValues="value"></ElementDefinition>
-<!--            <label>{{ key }}</label>  <br>-->
-<!--            <span v-for="(data, key) in value" :key="key">-->
-<!--               {{key}} :-->
-<!--            {{ data }}-->
-<!--            </span>-->
         </div>
     </div>
 </template>
